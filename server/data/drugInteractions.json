@@ -1,0 +1,1052 @@
+[
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 1
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 2
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 3
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 4
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 5
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 6
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 7
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 8
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 9
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 10
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 11
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 12
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 13
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 14
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 15
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 16
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 17
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 18
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 19
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 20
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 21
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 22
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 23
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 24
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 25
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 26
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 27
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 28
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 29
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 30
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 31
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 32
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 33
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 34
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 35
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 36
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 37
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 38
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 39
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 40
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 41
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 42
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 43
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 44
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 45
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 46
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 47
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 48
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 49
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 50
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 51
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 52
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 53
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 54
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 55
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 56
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 57
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 58
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 59
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 60
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 61
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 62
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 63
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 64
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 65
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 66
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 67
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 68
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 69
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 70
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 71
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 72
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 73
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 74
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 75
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 76
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 77
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 78
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 79
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 80
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 81
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 82
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 83
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 84
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 85
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 86
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 87
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 88
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 89
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 90
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 91
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 92
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 93
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 94
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 95
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 96
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 97
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 98
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 99
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 100
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 101
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 102
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 103
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 104
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 105
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 106
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 107
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 108
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 109
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 110
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 111
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 112
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 113
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 114
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 115
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 116
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 117
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 118
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 119
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 120
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 121
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 122
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 123
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 124
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 125
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 126
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 127
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 128
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 129
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 130
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 131
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 132
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 133
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 134
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 135
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 136
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 137
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 138
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 139
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 140
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 141
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 142
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 143
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 144
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 145
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 146
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 147
+  },
+  {
+    "med1": "Aspirin",
+    "med2": "Ibuprofen",
+    "severity": "dangerous",
+    "note": "Increased risk of gastrointestinal bleeding.",
+    "id": 148
+  },
+  {
+    "med1": "Metformin",
+    "med2": "Omeprazole",
+    "severity": "mild",
+    "note": "Omeprazole may reduce metformin absorption.",
+    "id": 149
+  },
+  {
+    "med1": "Warfarin",
+    "med2": "Amoxicillin",
+    "severity": "dangerous",
+    "note": "Increases bleeding risk.",
+    "id": 150
+  }
+]

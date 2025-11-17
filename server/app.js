@@ -1,0 +1,131 @@
+const dotenv = require('dotenv');
+dotenv.config();
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+const path = require('path');
+const cron = require('node-cron');
+const authRoutes = require('./routes/authRoutes');
+const prescriptionRoutes = require('./routes/prescriptionRoutes');
+const reminderRoutes = require('./routes/reminderRoutes');
+const chatRoutes = require('./routes/chatRoutes');
+const Reminder = require('./models/Reminder');
+const ReminderHistory = require('./models/ReminderHistory');
+const User = require('./models/User'); // Import User model
+const { sendEmail, sendWhatsAppMessage } = require('./services/notificationService'); // Import notification service
+
+const app = express();
+const PORT = process.env.PORT || 5001;
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+// Serve static files from the 'uploads' directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/prescriptions', prescriptionRoutes);
+app.use('/api/reminders', reminderRoutes);
+app.use('/api/chat', chatRoutes);
+
+// MongoDB Connection
+mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+})
+.then(() => console.log('MongoDB connected'))
+.catch(err => console.error(err));
+
+// Cron job for reminders
+cron.schedule('* * * * *', async () => {
+    console.log('Running reminder check cron job...');
+
+    const now = new Date();
+
+    // Normalize time → "HH:MM"
+    const currentTime = now
+        .toLocaleTimeString('en-US', { hour12: false })
+        .slice(0, 5);
+
+    // Normalize date → "YYYY-MM-DD"
+    const currentDay = now.toISOString().split('T')[0];
+
+    try {
+        // 🔥 1. Auto-mark expired reminders
+        await Reminder.updateMany(
+            { endDate: { $lt: currentDay }, status: "active" }, // Use correct endDate field
+            { status: "expired" }
+        );
+
+        // 🔥 2. Find reminders due right now
+        const dueReminders = await Reminder.find({
+            status: 'active',
+            startDate: { $lte: currentDay },
+            endDate: { $gte: currentDay },
+            time: currentTime,
+        }).populate('user'); // Populate user data to get notification preferences
+
+        // 🔥 3. Trigger reminders
+        for (const reminder of dueReminders) {
+            if (!reminder.user || !reminder.user.enableNotifications) {
+                console.log(`Notifications disabled for user ${reminder.user._id} or user not found.`);
+                continue;
+            }
+
+            let notificationStatus = 'failed';
+            let notificationMethodUsed = 'none';
+
+            const messageBody = `Reminder: It's time to take your ${reminder.medicineName}. Dosage: ${reminder.dosage} at ${reminder.time}.`;
+            const emailSubject = `Medication Reminder: ${reminder.medicineName}`;
+
+            try {
+                if (reminder.notifyBy === 'email' || reminder.notifyBy === 'both') {
+                    if (reminder.user.email) {
+                        await sendEmail(reminder.user.email, emailSubject, messageBody);
+                        notificationStatus = 'sent';
+                        notificationMethodUsed = 'email';
+                    } else {
+                        console.warn(`User ${reminder.user._id} has email notification enabled but no email address.`);
+                    }
+                }
+
+                if (reminder.notifyBy === 'whatsapp' || reminder.notifyBy === 'both') {
+                    if (reminder.user.whatsappNumber) {
+                        await sendWhatsAppMessage(`whatsapp:${reminder.user.whatsappNumber}`, messageBody);
+                        notificationStatus = notificationStatus === 'sent' ? 'sent' : 'sent'; // If email also sent, keep as sent
+                        notificationMethodUsed = notificationMethodUsed === 'email' ? 'both' : 'whatsapp';
+                    } else {
+                        console.warn(`User ${reminder.user._id} has WhatsApp notification enabled but no WhatsApp number.`);
+                    }
+                }
+            } catch (notifyError) {
+                console.error(`Error sending notification for reminder ${reminder._id}:`, notifyError);
+                // If one method fails, still try the other, and status remains 'failed' unless one succeeds
+            }
+
+            await ReminderHistory.create({
+                user: reminder.user._id,
+                reminder: reminder._id,
+                medicineName: reminder.medicineName,
+                scheduledTime: reminder.time,
+                triggerDate: now,
+                status: notificationStatus, // Use actual notification status
+                notificationMethod: notificationMethodUsed,
+            });
+
+            console.log(`Reminder processed for ${reminder.medicineName} to user ${reminder.user._id} via ${notificationMethodUsed} with status: ${notificationStatus}`);
+        }
+
+    } catch (error) {
+        console.error('Error in reminder cron job:', error);
+    }
+});
+
+// Basic Route
+app.get('/', (req, res) => {
+    res.send('API is running...');
+});
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
