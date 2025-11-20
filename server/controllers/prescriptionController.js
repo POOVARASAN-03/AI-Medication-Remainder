@@ -2,6 +2,7 @@ const axios = require('axios');
 const Prescription = require('../models/Prescription');
 const medicineDictionary = require('../data/medicineDictionary.json');
 const drugInteractionsData = require('../data/drugInteractions.json');
+const commonMedicineNames = require('../data/commonMedicineNames.json'); // New import
 const uploadToCloudinary = require('../utils/cloudinaryUpload');// Configure Cloudinary
 const Reminder = require('../models/Reminder'); // Added Reminder model import
 
@@ -21,26 +22,44 @@ function cleanOCRText(text) {
     .trim();
 }
 
-function buildMedicineRegex(dictionary) {
-  const escaped = dictionary.map(m => m.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
-  return new RegExp(`(?=\\b(${escaped.join("|")})\\b)`, "gi");
+function buildMedicineRegex(dictionary, commonNames) {
+  const allNames = [
+    ...dictionary.map(m => ({
+      name: m,
+      isCommon: false
+    })),
+    ...commonNames.map(cn => ({
+      name: cn.commonName,
+      isCommon: true
+    }))
+  ].sort((a, b) => b.name.length - a.name.length); // Prioritize longer names
+
+  const escapedNames = allNames.map(item => item.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  return new RegExp(`(?=\\b(${escapedNames.join("|")})\\b)`, "gi");
 }
 
 const extractMedicineDetails = (rawText) => {
   const text = cleanOCRText(rawText);
 
-  const medicineRegex = buildMedicineRegex(medicineDictionary);
+  const medicineRegex = buildMedicineRegex(medicineDictionary, commonMedicineNames); // Pass common names
 
   // STEP 1 — Split text by all dynamic medicine names
   const parts = text.split(medicineRegex);
-  const names = text.match(medicineRegex) || [];
+  const names = (text.match(medicineRegex) || []).map(match => match.trim()); // Trim matched names
 
   let segments = [];
 
   // STEP 2 — Reattach names to their segment
+  // Handle cases where a matched name might be followed by other medicine details
   for (let i = 0; i < parts.length; i++) {
-    const seg = (names[i] ? names[i] : "") + " " + parts[i];
-    segments.push(seg.trim());
+    if (names[i]) {
+      // Find the dictionary name for the matched common name, if it exists
+      const dictName = commonMedicineNames.find(cn => cn.commonName.toLowerCase() === names[i].toLowerCase());
+      const actualName = dictName ? dictName.dictionaryName : names[i];
+      segments.push((actualName + " " + parts[i]).trim());
+    } else {
+      segments.push(parts[i].trim());
+    }
   }
 
   // STEP 3 — Remove duplicates and blank entries
@@ -50,23 +69,37 @@ const extractMedicineDetails = (rawText) => {
   const extractedNames = new Set();
 
   segments.forEach(segment => {
-    // must contain dosage, otherwise skip duplicates
-    if (!segment.match(/\d+\s*(mg|mcg|g)/i)) return;
+    // Must contain dosage, otherwise skip duplicates
+    if (!segment.match(/\d+\s*(mg|mcg|g)/i) &&
+      !(segment.toLowerCase().includes("stat") && segment.match(/\d+\s*gm/i))) return; // Allow 'Stat' with 'gm' for Para
 
-    const medName = medicineDictionary.find(m =>
-      segment.toLowerCase().includes(m.toLowerCase())
+    let medName = null;
+    // Try to find an exact match from the dictionary first
+    medName = medicineDictionary.find(m =>
+      new RegExp(`\\b${m.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, 'i').test(segment)
     );
+
+    if (!medName) {
+      // If not found, try to find a match from common names and map to dictionary name
+      const commonMatch = commonMedicineNames.find(cn =>
+        new RegExp(`\\b${cn.commonName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, 'i').test(segment)
+      );
+      if (commonMatch) {
+        medName = commonMatch.dictionaryName;
+      }
+    }
+
     if (!medName) return;
 
-    const dosageCandidate = segment.match(/(\d+\s*(mg|mcg|g))/i);
-    const frequencyCandidate = segment.match(/\b(\d+-\d+-\d+-\d+)\b/);
+    const dosageCandidate = segment.match(/(\d+\s*(mg|mcg|g|gm))/i); // Added 'gm' to dosage regex
+    const frequencyCandidate = segment.match(/\b(\d+-\d+-\d+-\d+|\d+-\d+-\d+|\d+-\d+|Stat)\b/i); // Added 'Stat'
     const durationCandidate = segment.match(/(\d+)\s*days/i);
 
     if (medName) {
       medicines.push({
         name: medName,
         dosage: dosageCandidate ? dosageCandidate[1].trim() : "",
-        frequency: frequencyCandidate ? frequencyCandidate[1].trim() : "",
+        frequency: frequencyCandidate ? frequencyCandidate[1].trim().replace(/stat/i, "Stat") : "", // Normalize Stat
         duration: durationCandidate ? `${parseInt(durationCandidate[1])} days` : "", // Remove leading zeros
       });
       extractedNames.add(medName.toLowerCase());
@@ -75,7 +108,13 @@ const extractMedicineDetails = (rawText) => {
 
   // Fallback / secondary pass for names that might have been missed by the main regex
   // This handles cases where dosage/frequency/duration might be on separate lines or less structured
-  medicineDictionary.forEach(dictMed => {
+  // This section needs to be updated to use commonMedicineNames as well
+  const allPossibleMedNames = [
+    ...medicineDictionary,
+    ...commonMedicineNames.map(cn => cn.dictionaryName)
+  ].filter((value, index, self) => self.indexOf(value) === index); // Unique names
+
+  allPossibleMedNames.forEach(dictMed => {
     const normalizedDictMed = dictMed.toLowerCase();
     if (!extractedNames.has(normalizedDictMed) && text.toLowerCase().includes(normalizedDictMed)) {
       // Attempt to find the full line containing this medicine
@@ -84,14 +123,14 @@ const extractMedicineDetails = (rawText) => {
         const segment = cleanOCRText(lineMatch[0]); // Clean the matched line
 
         // Re-attempt extraction of details from this specific line
-        const dosageMatch = segment.match(/(\d+\s*(?:mg|mcg|g))/i);
-        const frequencyMatch = segment.match(/\b(\d+-\d+-\d+-\d+|\d+-\d+-\d+|\d+-\d+)\b/);
+        const dosageMatch = segment.match(/(\d+\s*(?:mg|mcg|g|gm))/i);
+        const frequencyMatch = segment.match(/\b(\d+-\d+-\d+-\d+|\d+-\d+-\d+|\d+-\d+|Stat)\b/i);
         const durationMatch = segment.match(/(\d+)\s*days/i);
 
         medicines.push({
           name: dictMed,
           dosage: dosageMatch ? dosageMatch[1].trim() : "",
-          frequency: frequencyMatch ? frequencyMatch[1].trim() : "",
+          frequency: frequencyMatch ? frequencyMatch[1].trim().replace(/stat/i, "Stat") : "",
           duration: durationMatch ? `${parseInt(durationMatch[1])} days` : "",
         });
         extractedNames.add(normalizedDictMed);
@@ -104,6 +143,7 @@ const extractMedicineDetails = (rawText) => {
 
 function parseFrequency(freq) {
   if (!freq || freq.trim() === "") return [0, 0, 0, 0];
+  if (freq.toLowerCase() === "stat") return [1, 0, 0, 0]; // 'Stat' implies immediate/morning dose
 
   let parts = freq.split("-").map(n => parseInt(n || 0));
   while (parts.length < 4) parts.push(0);
@@ -269,9 +309,9 @@ const uploadPrescription = async (req, res) => {
     });
 
     // 6. Auto-create reminders
-    if (req.user) {
-      await autoCreateReminders(prescription, req.user);
-    }
+    // if (req.user) {
+    //   await autoCreateReminders(prescription, req.user);
+    // }
 
     return res.status(201).json({
       message: 'Prescription uploaded and analyzed successfully',

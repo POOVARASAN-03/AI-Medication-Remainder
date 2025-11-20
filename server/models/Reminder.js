@@ -20,29 +20,38 @@ const reminderSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+
+    // Time to trigger reminder
     time: {
-      type: String,
+      type: String, // Format: "HH:MM"
       required: true,
     },
+
+    // Date Range
     startDate: {
-      type: String, // YYYY-MM-DD
+      type: String, // Format: YYYY-MM-DD
       required: true,
     },
     endDate: {
-      type: String, // YYYY-MM-DD
+      type: String, // Format: YYYY-MM-DD
       required: true,
     },
+
+    // Notification Method
     notifyBy: {
       type: String,
       enum: ['email', 'whatsapp', 'both'],
       default: 'email',
     },
+
+    // Contact Details
     whatsappNumber: {
-      type: String,
+      type: String, // Example: "whatsapp:+919876543210"
     },
     email: {
       type: String,
     },
+
     status: {
       type: String,
       enum: ['active', 'expired'],

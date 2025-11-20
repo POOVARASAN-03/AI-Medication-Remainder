@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const ReminderHistorySchema = new mongoose.Schema({
+const reminderHistorySchema = mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
@@ -25,9 +25,14 @@ const ReminderHistorySchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['sent', 'taken', 'missed'],
+    enum: ['sent', 'taken', 'missed', 'failed'], // Added 'failed'
     default: 'sent',
+  },
+  notificationMethod: {
+    type: String,
+    enum: ['email', 'whatsapp', 'both', 'none'],
+    default: 'none',
   },
 });
 
-module.exports = mongoose.model('ReminderHistory', ReminderHistorySchema);
+module.exports = mongoose.model('ReminderHistory', reminderHistorySchema);

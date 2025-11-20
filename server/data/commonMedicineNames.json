@@ -1,0 +1,11 @@
+[
+  { "commonName": "Pan", "dictionaryName": "Pantoprazole" },
+  { "commonName": "Para", "dictionaryName": "Paracetamol" },
+  { "commonName": "Strocit", "dictionaryName": "Strocit" },
+  { "commonName": "Ecosprin AV", "dictionaryName": "Aspirin" },
+  { "commonName": "Betacap TR", "dictionaryName": "Propranolol" },
+  { "commonName": "Vertin", "dictionaryName": "Vertin" },
+  { "commonName": "Clopilet", "dictionaryName": "Clopidogrel" },
+  { "commonName": "Sitaglyn M", "dictionaryName": "Sitagliptin" },
+  { "commonName": "Sorbitrate", "dictionaryName": "Isosorbide Mononitrate" }
+]

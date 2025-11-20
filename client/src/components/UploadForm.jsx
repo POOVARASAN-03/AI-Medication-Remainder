@@ -37,7 +37,12 @@ const UploadForm = ({ onUploadSuccess }) => {
       setSelectedFile(null);
       if (onUploadSuccess) {
         // Pass the new prescription ID to the callback
-        onUploadSuccess(res.data.prescription._id);
+        const newPrescriptionId = res.data.prescription._id;
+        localStorage.setItem('lastUploadedPrescription', JSON.stringify({
+          id: newPrescriptionId,
+          timestamp: new Date().toISOString(),
+        }));
+        onUploadSuccess(newPrescriptionId);
       }
     } catch (err) {
       console.error('Error uploading prescription:', err);

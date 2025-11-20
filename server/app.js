@@ -12,7 +12,7 @@ const chatRoutes = require('./routes/chatRoutes');
 const Reminder = require('./models/Reminder');
 const ReminderHistory = require('./models/ReminderHistory');
 const User = require('./models/User'); // Import User model
-const { sendEmail, sendWhatsAppMessage } = require('./services/notificationService'); // Import notification service
+const { sendEmail, sendWhatsAppReminder } = require('./services/notificationService'); // Import notification service
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -64,7 +64,7 @@ cron.schedule('* * * * *', async () => {
             status: 'active',
             startDate: { $lte: currentDay },
             endDate: { $gte: currentDay },
-            time: currentTime,
+            time: currentTime, // Match time from Reminder model
         }).populate('user'); // Populate user data to get notification preferences
 
         // 🔥 3. Trigger reminders
@@ -77,27 +77,41 @@ cron.schedule('* * * * *', async () => {
             let notificationStatus = 'failed';
             let notificationMethodUsed = 'none';
 
-            const messageBody = `Reminder: It's time to take your ${reminder.medicineName}. Dosage: ${reminder.dosage} at ${reminder.time}.`;
+            const userName = reminder.user.name.split(' ')[0]; // First name
+            const slotName = reminder.time === '08:00' ? 'Morning' : reminder.time === '13:00' ? 'Afternoon' : reminder.time === '18:00' ? 'Evening' : 'Night';
+            const medicineList = `${reminder.medicineName} (${reminder.dosage})`;
+
             const emailSubject = `Medication Reminder: ${reminder.medicineName}`;
+            const emailBody = `Hi ${userName},
+
+It's time to take your ${slotName} medication:
+- ${reminder.medicineName} (Dosage: ${reminder.dosage})
+
+Please take it at ${reminder.time}.
+
+Thank you!`;
 
             try {
-                if (reminder.notifyBy === 'email' || reminder.notifyBy === 'both') {
-                    if (reminder.user.email) {
-                        await sendEmail(reminder.user.email, emailSubject, messageBody);
-                        notificationStatus = 'sent';
-                        notificationMethodUsed = 'email';
-                    } else {
-                        console.warn(`User ${reminder.user._id} has email notification enabled but no email address.`);
-                    }
-                }
-
                 if (reminder.notifyBy === 'whatsapp' || reminder.notifyBy === 'both') {
-                    if (reminder.user.whatsappNumber) {
-                        await sendWhatsAppMessage(`whatsapp:${reminder.user.whatsappNumber}`, messageBody);
-                        notificationStatus = notificationStatus === 'sent' ? 'sent' : 'sent'; // If email also sent, keep as sent
-                        notificationMethodUsed = notificationMethodUsed === 'email' ? 'both' : 'whatsapp';
+                    if (reminder.whatsappNumber) {
+                        const whatsappTo = reminder.whatsappNumber.startsWith("whatsapp:")
+                            ? reminder.whatsappNumber
+                            : `whatsapp:${reminder.whatsappNumber}`;
+                
+                        await sendWhatsAppReminder(
+                            whatsappTo,
+                            userName,
+                            slotName,
+                            medicineList
+                        );
+                
+                        notificationStatus = 'sent';
+                        notificationMethodUsed =
+                            notificationMethodUsed === 'email' ? 'both' : 'whatsapp';
                     } else {
-                        console.warn(`User ${reminder.user._id} has WhatsApp notification enabled but no WhatsApp number.`);
+                        console.warn(
+                            `Reminder ${reminder._id} has WhatsApp enabled but no number.`
+                        );
                     }
                 }
             } catch (notifyError) {

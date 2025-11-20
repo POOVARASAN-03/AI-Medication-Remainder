@@ -1,39 +1,104 @@
 const Reminder = require('../models/Reminder');
 const ReminderHistory = require('../models/ReminderHistory');
+const Prescription = require('../models/Prescription'); // Import Prescription model
+const User = require('../models/User'); // Import User model
 
 // @desc    Set a new reminder
 // @route   POST /api/reminders
 // @access  Private
 const setReminder = async (req, res) => {
-  const { prescription, medicineName, time, startDate, endDate } = req.body;
+  const { prescription, medicineName, timeSlot, startDate, endDate, notificationMethod, whatsappNumber } = req.body; // Added whatsappNumber
+  console.log('1. whatsappNumber from req.body:', whatsappNumber);
 
-  if (!prescription || !medicineName || !time || !startDate || !endDate) {
-    return res.status(400).json({ message: 'Please provide all reminder details' });
+  if (!prescription || !medicineName || !timeSlot || !startDate || !endDate || !notificationMethod) {
+    return res.status(400).json({ message: "Missing required fields" });
   }
 
   try {
-    const reminder = await Reminder.create({
+    const user = await User.findById(req.user._id); // Fetch the user
+    if (!user) return res.status(404).json({ message: "User not found or not authenticated" });
+
+    const timeMap = {
+      morning: "08:00",
+      afternoon: "13:00",
+      evening: "18:00",
+      night: "21:00",
+    };
+
+    const time = timeMap[timeSlot];
+    if (!time) {
+      return res.status(400).json({ message: "Invalid time slot provided" });
+    }
+
+    // Get medicine dosage from the prescription's medicines array
+    const pres = await Prescription.findById(prescription);
+    if (!pres) return res.status(404).json({ message: "Prescription not found" });
+    const selectedMedicine = pres.medicines.find(med => med.name === medicineName);
+    if (!selectedMedicine) {
+      return res.status(404).json({ message: `Medicine '${medicineName}' not found in prescription` });
+    }
+
+    // Determine which WhatsApp number to use (frontend provided or user profile)
+    let finalWhatsappNumber = whatsappNumber || user.whatsappNumber; // Prioritize frontend provided
+    console.log('2. finalWhatsappNumber (after prioritization):', finalWhatsappNumber);
+    let formattedWhatsappNumber = undefined; // Default to undefined
+
+    if ((notificationMethod === 'whatsapp' || notificationMethod === 'both') && finalWhatsappNumber) {
+      // Remove any existing 'whatsapp:' prefix and leading '+' if present for consistent re-formatting
+      let cleanedNumber = finalWhatsappNumber.replace(/^(whatsapp:\+?|\+)/, '');
+      console.log('3. cleanedNumber (after stripping prefixes):', cleanedNumber);
+
+      // Add 'whatsapp:+' prefix
+      formattedWhatsappNumber = `whatsapp:+${cleanedNumber}`;
+      console.log('4. formattedWhatsappNumber (final format):', formattedWhatsappNumber);
+    }
+
+    console.log('5. Creating new reminder with whatsappNumber:', formattedWhatsappNumber);
+    const newReminder = await Reminder.create({
       user: req.user._id,
       prescription,
       medicineName,
+      dosage: selectedMedicine.dosage, // Get dosage from selected medicine
       time,
       startDate,
       endDate,
+      notifyBy: notificationMethod,
+      whatsappNumber: formattedWhatsappNumber,
+      email: (notificationMethod === 'email' || notificationMethod === 'both') ? user.email : undefined,
+      status: 'active',
     });
 
-    res.status(201).json({ message: 'Reminder set successfully', reminder });
-  } catch (error) {
-    console.error('Error setting reminder:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    // If a WhatsApp number was provided and successfully formatted, update the user's profile
+    if (whatsappNumber && formattedWhatsappNumber) {
+        console.log('6. Updating user whatsappNumber to:', formattedWhatsappNumber);
+        user.whatsappNumber = formattedWhatsappNumber;
+        await user.save();
+    }
+
+    res.status(201).json({
+      message: "Reminder set successfully",
+      reminder: newReminder,
+    });
+
+  } catch (err) {
+    console.error("Error setting reminder:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+
 
 // @desc    Get all reminders for a user
 // @route   GET /api/reminders
 // @access  Private
 const getReminders = async (req, res) => {
   try {
-    const reminders = await Reminder.find({ user: req.user._id }).populate('prescription', 'image');
+    // Added filter by prescriptionId for PrescriptionViewPage to fetch specific reminders
+    const filter = { user: req.user._id, status: 'active' };
+    if (req.query.prescriptionId) {
+      filter.prescription = req.query.prescriptionId;
+    }
+
+    const reminders = await Reminder.find(filter).populate('prescription', 'image');
     res.status(200).json(reminders);
   } catch (error) {
     console.error('Error fetching reminders:', error);

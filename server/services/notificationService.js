@@ -3,10 +3,10 @@ const twilio = require('twilio');
 
 // Nodemailer transporter setup
 const transporter = nodemailer.createTransport({
-  service: 'gmail', // You can use other services or direct SMTP
+  service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER, // Your email address
-    pass: process.env.EMAIL_PASS, // Your email password or app-specific password
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
@@ -16,6 +16,9 @@ const twilioClient = twilio(
   process.env.TWILIO_AUTH_TOKEN
 );
 
+/**
+ * SEND EMAIL
+ */
 const sendEmail = async (to, subject, text) => {
   try {
     await transporter.sendMail({
@@ -24,34 +27,61 @@ const sendEmail = async (to, subject, text) => {
       subject,
       text,
     });
-    console.log(`Email sent to ${to}: ${subject}`);
-    return { success: true, method: 'email' };
+
+    console.log(`EMAIL SENT → ${to}`);
+    return { success: true, method: "email" };
+
   } catch (error) {
-    console.error(`Error sending email to ${to}:`, error);
-    return { success: false, method: 'email', error: error.message };
+    console.error("EMAIL ERROR:", error);
+    return { success: false, method: "email", error: error.message };
   }
 };
 
-const sendWhatsAppMessage = async (to, body) => {
+
+/**
+ * SEND WHATSAPP TEMPLATE MESSAGE (Quick Reply)
+ * Template variables:
+ * {{1}} = User Name
+ * {{2}} = Slot (Morning/Afternoon/Evening/Night)
+ * {{3}} = Medicine list for this slot
+ */
+const sendWhatsAppReminder = async (to, userName, slotName, medicineList) => {
   try {
-    // Twilio WhatsApp numbers are typically in the format 'whatsapp:+1234567890'
-    const from = process.env.TWILIO_WHATSAPP_NUMBER; // Your Twilio WhatsApp number
-    if (!from || !to.startsWith('whatsapp:')) {
-      console.error('Invalid Twilio WhatsApp FROM number or TO number format.');
-      return { success: false, method: 'whatsapp', error: 'Invalid number format' };
+    const from = process.env.TWILIO_WHATSAPP_NUMBER;
+    const templateSid = process.env.TWILIO_TEMPLATE_SID;
+
+    if (!from || !templateSid) {
+      throw new Error("Missing TWILIO_WHATSAPP_NUMBER or TWILIO_TEMPLATE_SID");
     }
 
-    await twilioClient.messages.create({
-      from: from,
-      to: to, // Ensure this is in 'whatsapp:+1234567890' format
-      body: body,
-    });
-    console.log(`WhatsApp message sent to ${to}: ${body}`);
-    return { success: true, method: 'whatsapp' };
-  } catch (error) {
-    console.error(`Error sending WhatsApp message to ${to}:`, error);
-    return { success: false, method: 'whatsapp', error: error.message };
+    if (!to.startsWith("whatsapp:")) {
+      throw new Error("WhatsApp number must start with whatsapp:+");
+    }
+
+    const payload = {
+      from,
+      to,
+      contentSid: templateSid,
+      contentVariables: JSON.stringify({
+        "1": userName,
+        "2": slotName,
+        "3": medicineList
+      })
+    };
+
+    // 🔥 Universal Template API endpoint
+    const message = await twilioClient.messages.create(payload);
+
+    console.log(`WHATSAPP TEMPLATE SENT → ${to}`);
+    return { success: true, method: "whatsapp", sid: message.sid };
+
+  } catch (err) {
+    console.error("WHATSAPP TEMPLATE ERROR:", err.message);
+    return { success: false, method: "whatsapp", error: err.message };
   }
 };
 
-module.exports = { sendEmail, sendWhatsAppMessage };
+
+
+
+module.exports = { sendEmail, sendWhatsAppReminder };
