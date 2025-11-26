@@ -4,6 +4,9 @@ import numpy as np
 import cv2
 import requests
 
+import os
+os.environ["FLAGS_allocator_strategy"] = "naive_best_fit"
+
 app = Flask(__name__)
 
 # Initialize OCR engine (English + angle detection)
