@@ -63,6 +63,8 @@ def ocr_image():
         return jsonify({'error': f'OCR processing error: {str(e)}'}), 500
 
 
-if __name__ == '__main__':
-    print("🚀 OCR Server running on port 5002")
-    app.run(host='0.0.0.0', port=5002)
+if __name__ == "__main__":
+    import os
+    port = int(os.environ.get("PORT", 5000))  # Render gives PORT env var
+    print(f"🚀 OCR Server running on port {port}")
+    app.run(host="0.0.0.0", port=port)

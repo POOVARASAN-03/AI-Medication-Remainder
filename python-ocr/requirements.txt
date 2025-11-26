@@ -1,4 +1,6 @@
-paddleocr
 Flask
-opencv-python
+gunicorn
+paddleocr
+opencv-python-headless
+numpy
 requests
