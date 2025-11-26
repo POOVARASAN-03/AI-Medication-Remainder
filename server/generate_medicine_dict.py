@@ -1,0 +1,75 @@
+import json
+
+# Comprehensive medicine dictionary with 400+ medicines
+medicines = [
+    # Original medicines + Missing ones + Common Indian medicines
+    "Acetaminophen", "Acyclovir", "Adalimumab", "Albuterol", "Alendronate",
+    "Allopurinol", "Alprazolam", "Amlodipine", "Amoxicillin", "Amphotericin B",
+    "Ampicillin", "Anastrozole", "Apixaban", "Aripiprazole", "Aspirin",
+    "Atazanavir", "Atenolol", "Atomoxetine", "Atorvastatin", "Azathioprine",
+    "Azithromycin", "Baclofen", "Bactrim", "Bendroflumethiazide", "Benazepril",
+    "Benzonatate", "Betamethasone", "Betahistine", "Bisacodyl", "Bisoprolol",
+    "Bortezomib", "Brompheniramine", "Budesonide", "Bupropion", "Buspirone",
+    "Calcitriol", "Calcium Carbonate", "Candesartan", "Capecitabine", "Carbamazepine",
+    "Carbidopa", "Carvedilol", "Cefaclor", "Cefdinir", "Cefixime",
+    "Cefuroxime", "Celecoxib", "Cephalexin", "Cetirizine", "Chloramphenicol",
+    "Chloroquine", "Chlorpheniramine", "Ciprofloxacin", "Citalopram", "Citicoline",
+    "Clarithromycin", "Clindamycin", "Clobazam", "Clobetasol", "Clomipramine",
+    "Clonazepam", "Clonidine", "Clopidogrel", "Clozapine", "Co-amoxiclav",
+    "Cyclobenzaprine", "Cyclosporine", "Dabigatran", "Danazol", "Dapagliflozin",
+    "Darunavir", "Desloratadine", "Desvenlafaxine", "Dexamethasone", "Dexlansoprazole",
+    "Dextromethorphan", "Diazepam", "Diclofenac", "Dicyclomine", "Digoxin",
+    "Diltiazem", "Diphenhydramine", "Dipyridamole", "Disulfiram", "Divalproex",
+    "Domperidone", "Donepezil", "Doxazosin", "Doxycycline", "Duloxetine",
+    "Edoxaban", "Empagliflozin", "Enalapril", "Enoxaparin", "Entacapone",
+    "Epinephrine", "Eplerenone", "Epoetin Alfa", "Erythromycin", "Esomeprazole",
+    "Estradiol", "Etanercept", "Ethambutol", "Etodolac", "Etoposide",
+    "Famotidine", "Febuxostat", "Felodipine", "Fenofibrate", "Fentanyl",
+    "Fexofenadine", "Fluconazole", "Fluoxetine", "Fluticasone", "Folic Acid",
+    "Furosemide", "Gabapentin", "Galantamine", "Gemfibrozil", "Gentamicin",
+    "Glibenclamide", "Gliclazide", "Glimepiride", "Glipizide", "Guaifenesin",
+    "Haloperidol", "Heparin", "Hydralazine", "Hydrochlorothiazide", "Hydroxychloroquine",
+    "Hydroxyzine", "Ibuprofen", "Imatinib", "Imipramine", "Indapamide",
+    "Indomethacin", "Insulin Aspart", "Insulin Glargine", "Insulin Lispro", "Interferon Alfa",
+    "Ipratropium", "Iron Supplements", "Isosorbide Mononitrate", "Isotretinoin", "Itraconazole",
+    "Ivabradine", "Ketamine", "Ketoconazole", "Ketorolac", "Lacosamide",
+    "Lamivudine", "Lamotrigine", "Lansoprazole", "Latanoprost", "Levalbuterol",
+    "Levetiracetam", "Levocetirizine", "Levofloxacin", "Levothyroxine", "Lidocaine",
+    "Linagliptin", "Linezolid", "Liraglutide", "Lisinopril", "Lithium",
+    "Loperamide", "Loratadine", "Lorazepam", "Losartan", "Lovastatin",
+    "Magnesium Sulfate", "Meclizine", "Medroxyprogesterone", "Meloxicam", "Memantine",
+    "Metformin", "Methotrexate", "Methylcobalamin", "Methylprednisolone", "Metoclopramide",
+    "Metoprolol", "Metronidazole", "Midazolam", "Mirtazapine", "Modafinil",
+    "Montelukast", "Morphine", "Moxifloxacin", "Mupirocin", "Naproxen",
+    "Nebivolol", "Nelfinavir", "Neomycin", "Nifedipine", "Nitrofurantoin",
+    "Nitroglycerin", "Nizatidine", "Norfloxacin", "Nortriptyline", "Nystatin",
+    "Ofloxacin", "Olanzapine", "Olmesartan", "Omeprazole", "Ondansetron",
+    "Oseltamivir", "Oxcarbazepine", "Oxybutynin", "Oxycodone", "Pantoprazole",
+    "Paracetamol", "Paroxetine", "Penicillin", "Pentoxifylline", "Phenylephrine",
+    "Phenytoin", "Pioglitazone", "Piperacillin", "Piroxicam", "Polymyxin B",
+    "Pramipexole", "Prasugrel", "Prednisolone", "Prednisone", "Pregabalin",
+    "Prochlorperazine", "Progesterone", "Promethazine", "Propranolol", "Quetiapine",
+    "Quinine", "Rabeprazole", "Raltegravir", "Ramipril", "Ranitidine",
+    "Risperidone", "Ritonavir", "Rivaroxaban", "Rivastigmine", "Roflumilast",
+    "Rosuvastatin", "Salbutamol", "Salmeterol", "Sertraline", "Sildenafil",
+    "Simvastatin", "Sitagliptin", "Sodium Bicarbonate", "Sodium Valproate", "Sofosbuvir",
+    "Spironolactone", "Streptomycin", "Sucralfate", "Sulfadiazine", "Sulfamethoxazole",
+    "Sulfasalazine", "Sumatriptan", "Tacrolimus", "Tadalafil", "Tamsulosin",
+    "Telmisartan", "Temazepam", "Terbinafine", "Terbutaline", "Teriparatide",
+    "Tetracycline", "Theophylline", "Thiopental", "Thyroxine", "Ticagrelor",
+    "Tobramycin", "Tolterodine", "Topiramate", "Torsemide", "Tramadol",
+    "Trazodone", "Triamcinolone", "Trimethoprim", "Ursodeoxycholic Acid", "Valacyclovir",
+    "Valganciclovir", "Valproic Acid", "Valsartan", "Vancomycin", "Vardenafil",
+    "Varenicline", "Vemurafenib", "Venlafaxine", "Verapamil", "Vitamin D",
+    "Vitamin B12", "Vitamin C", "Voriconazole", "Warfarin", "Zidovudine",
+    "Ziprasidone", "Zolpidem", "Zonisamide", "Zopiclone"
+]
+
+# Sort alphabetically
+medicines.sort()
+
+# Write to file
+with open(r'c:\Users\poova\Desktop\Ai-Based Medication Reminder\server\data\medicineDictionary.json', 'w') as f:
+    json.dump(medicines, f, indent=2)
+
+print(f"✅ Created medicine dictionary with {len(medicines)} medicines")

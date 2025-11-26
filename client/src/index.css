@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Add any custom CSS here */
 .dot-flashing {
   position: relative;
   width: 10px;
@@ -14,7 +13,8 @@
   animation-delay: 0.5s;
 }
 
-.dot-flashing::before, .dot-flashing::after {
+.dot-flashing::before,
+.dot-flashing::after {
   content: '';
   display: inline-block;
   position: absolute;
@@ -44,6 +44,12 @@
 }
 
 @keyframes dotFlashing {
-  0% { background-color: #9880ff; }
-  50%, 100% { background-color: #ebe6ff; }
+  0% {
+    background-color: #9880ff;
+  }
+
+  50%,
+  100% {
+    background-color: #ebe6ff;
+  }
 }

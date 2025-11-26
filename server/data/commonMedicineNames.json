@@ -1,11 +1,350 @@
 [
-  { "commonName": "Pan", "dictionaryName": "Pantoprazole" },
-  { "commonName": "Para", "dictionaryName": "Paracetamol" },
-  { "commonName": "Strocit", "dictionaryName": "Strocit" },
-  { "commonName": "Ecosprin AV", "dictionaryName": "Aspirin" },
-  { "commonName": "Betacap TR", "dictionaryName": "Propranolol" },
-  { "commonName": "Vertin", "dictionaryName": "Vertin" },
-  { "commonName": "Clopilet", "dictionaryName": "Clopidogrel" },
-  { "commonName": "Sitaglyn M", "dictionaryName": "Sitagliptin" },
-  { "commonName": "Sorbitrate", "dictionaryName": "Isosorbide Mononitrate" }
+  {
+    "commonName": "Aciloc",
+    "dictionaryName": "Ranitidine"
+  },
+  {
+    "commonName": "Allegra",
+    "dictionaryName": "Fexofenadine"
+  },
+  {
+    "commonName": "Allerset",
+    "dictionaryName": "Fexofenadine"
+  },
+  {
+    "commonName": "Amaryl",
+    "dictionaryName": "Glimepiride"
+  },
+  {
+    "commonName": "AminoRel",
+    "dictionaryName": "Methylcobalamin"
+  },
+  {
+    "commonName": "Amlong",
+    "dictionaryName": "Amlodipine"
+  },
+  {
+    "commonName": "Asthalin",
+    "dictionaryName": "Salbutamol"
+  },
+  {
+    "commonName": "Atorva",
+    "dictionaryName": "Atorvastatin"
+  },
+  {
+    "commonName": "Augmentin",
+    "dictionaryName": "Co-amoxiclav"
+  },
+  {
+    "commonName": "Avil",
+    "dictionaryName": "Pheniramine"
+  },
+  {
+    "commonName": "Azithral",
+    "dictionaryName": "Azithromycin"
+  },
+  {
+    "commonName": "Becosules",
+    "dictionaryName": "Vitamin B12"
+  },
+  {
+    "commonName": "Betacap TR",
+    "dictionaryName": "Propranolol"
+  },
+  {
+    "commonName": "Brufen",
+    "dictionaryName": "Ibuprofen"
+  },
+  {
+    "commonName": "Budecort",
+    "dictionaryName": "Budesonide"
+  },
+  {
+    "commonName": "Calcirol",
+    "dictionaryName": "Vitamin D"
+  },
+  {
+    "commonName": "Calpol",
+    "dictionaryName": "Paracetamol"
+  },
+  {
+    "commonName": "Cardixin",
+    "dictionaryName": "Aspirin"
+  },
+  {
+    "commonName": "Cetrizine",
+    "dictionaryName": "Cetirizine"
+  },
+  {
+    "commonName": "Cifran",
+    "dictionaryName": "Ciprofloxacin"
+  },
+  {
+    "commonName": "Clavam",
+    "dictionaryName": "Co-amoxiclav"
+  },
+  {
+    "commonName": "Clopilet",
+    "dictionaryName": "Clopidogrel"
+  },
+  {
+    "commonName": "Combiflam",
+    "dictionaryName": "Ibuprofen"
+  },
+  {
+    "commonName": "Concor",
+    "dictionaryName": "Bisoprolol"
+  },
+  {
+    "commonName": "Corbis",
+    "dictionaryName": "Bisoprolol"
+  },
+  {
+    "commonName": "Cresar",
+    "dictionaryName": "Telmisartan"
+  },
+  {
+    "commonName": "Crestor",
+    "dictionaryName": "Rosuvastatin"
+  },
+  {
+    "commonName": "Deriphyllin",
+    "dictionaryName": "Theophylline"
+  },
+  {
+    "commonName": "Diamicron",
+    "dictionaryName": "Gliclazide"
+  },
+  {
+    "commonName": "Dolo",
+    "dictionaryName": "Paracetamol"
+  },
+  {
+    "commonName": "Duolin",
+    "dictionaryName": "Ipratropium"
+  },
+  {
+    "commonName": "Duphaston",
+    "dictionaryName": "Progesterone"
+  },
+  {
+    "commonName": "Duracol XR",
+    "dictionaryName": "Tramadol"
+  },
+  {
+    "commonName": "Ecosprin",
+    "dictionaryName": "Aspirin"
+  },
+  {
+    "commonName": "Ecosprin AV",
+    "dictionaryName": "Aspirin"
+  },
+  {
+    "commonName": "Eltroxin",
+    "dictionaryName": "Levothyroxine"
+  },
+  {
+    "commonName": "Folvite",
+    "dictionaryName": "Folic Acid"
+  },
+  {
+    "commonName": "Gastrolax",
+    "dictionaryName": "Rabeprazole"
+  },
+  {
+    "commonName": "Gelusil",
+    "dictionaryName": "Magnesium Sulfate"
+  },
+  {
+    "commonName": "Gluconorm",
+    "dictionaryName": "Metformin"
+  },
+  {
+    "commonName": "Glycomet",
+    "dictionaryName": "Metformin"
+  },
+  {
+    "commonName": "Januvia",
+    "dictionaryName": "Sitagliptin"
+  },
+  {
+    "commonName": "Lantus",
+    "dictionaryName": "Insulin Glargine"
+  },
+  {
+    "commonName": "Lasix",
+    "dictionaryName": "Furosemide"
+  },
+  {
+    "commonName": "Levocet",
+    "dictionaryName": "Levocetirizine"
+  },
+  {
+    "commonName": "Limcee",
+    "dictionaryName": "Vitamin C"
+  },
+  {
+    "commonName": "Lipitor",
+    "dictionaryName": "Atorvastatin"
+  },
+  {
+    "commonName": "Losar",
+    "dictionaryName": "Losartan"
+  },
+  {
+    "commonName": "Lyrica",
+    "dictionaryName": "Pregabalin"
+  },
+  {
+    "commonName": "MedicoPan",
+    "dictionaryName": "Pantoprazole"
+  },
+  {
+    "commonName": "Metacin",
+    "dictionaryName": "Indomethacin"
+  },
+  {
+    "commonName": "Metolar",
+    "dictionaryName": "Metoprolol"
+  },
+  {
+    "commonName": "Montair",
+    "dictionaryName": "Montelukast"
+  },
+  {
+    "commonName": "Moxikind CV",
+    "dictionaryName": "Co-amoxiclav"
+  },
+  {
+    "commonName": "NeuroFast",
+    "dictionaryName": "Citicoline"
+  },
+  {
+    "commonName": "Neurobion",
+    "dictionaryName": "Vitamin B12"
+  },
+  {
+    "commonName": "Nexito",
+    "dictionaryName": "Escitalopram"
+  },
+  {
+    "commonName": "Nexpro",
+    "dictionaryName": "Esomeprazole"
+  },
+  {
+    "commonName": "Norflox TZ",
+    "dictionaryName": "Norfloxacin"
+  },
+  {
+    "commonName": "Novomix",
+    "dictionaryName": "Insulin Aspart"
+  },
+  {
+    "commonName": "Oleanz",
+    "dictionaryName": "Olanzapine"
+  },
+  {
+    "commonName": "Omez",
+    "dictionaryName": "Omeprazole"
+  },
+  {
+    "commonName": "OsteoBin",
+    "dictionaryName": "Alendronate"
+  },
+  {
+    "commonName": "Pan",
+    "dictionaryName": "Pantoprazole"
+  },
+  {
+    "commonName": "Pantocid",
+    "dictionaryName": "Pantoprazole"
+  },
+  {
+    "commonName": "Para",
+    "dictionaryName": "Paracetamol"
+  },
+  {
+    "commonName": "Rablet",
+    "dictionaryName": "Rabeprazole"
+  },
+  {
+    "commonName": "Razo",
+    "dictionaryName": "Rabeprazole"
+  },
+  {
+    "commonName": "Rexipra",
+    "dictionaryName": "Escitalopram"
+  },
+  {
+    "commonName": "Rosuvas",
+    "dictionaryName": "Rosuvastatin"
+  },
+  {
+    "commonName": "Seroflo",
+    "dictionaryName": "Fluticasone"
+  },
+  {
+    "commonName": "Shelcal",
+    "dictionaryName": "Calcium Carbonate"
+  },
+  {
+    "commonName": "Shelcal",
+    "dictionaryName": "Calcium Carbonate"
+  },
+  {
+    "commonName": "Sitaglyn M",
+    "dictionaryName": "Sitagliptin"
+  },
+  {
+    "commonName": "Sorbitrate",
+    "dictionaryName": "Isosorbide Mononitrate"
+  },
+  {
+    "commonName": "Stamlo",
+    "dictionaryName": "Amlodipine"
+  },
+  {
+    "commonName": "Storvas",
+    "dictionaryName": "Atorvastatin"
+  },
+  {
+    "commonName": "Strocit",
+    "dictionaryName": "Citicoline"
+  },
+  {
+    "commonName": "Telma",
+    "dictionaryName": "Telmisartan"
+  },
+  {
+    "commonName": "Thyronorm",
+    "dictionaryName": "Levothyroxine"
+  },
+  {
+    "commonName": "Urimax",
+    "dictionaryName": "Tamsulosin"
+  },
+  {
+    "commonName": "Vertin",
+    "dictionaryName": "Betahistine"
+  },
+  {
+    "commonName": "Voveran",
+    "dictionaryName": "Diclofenac"
+  },
+  {
+    "commonName": "Zifi",
+    "dictionaryName": "Cefixime"
+  },
+  {
+    "commonName": "Zincovit",
+    "dictionaryName": "Vitamin C"
+  },
+  {
+    "commonName": "Zoloft",
+    "dictionaryName": "Sertraline"
+  },
+  {
+    "commonName": "Zyrtec",
+    "dictionaryName": "Cetirizine"
+  }
 ]

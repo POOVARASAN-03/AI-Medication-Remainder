@@ -1,9 +1,10 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const validator = require('validator');
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: '1h',
+    expiresIn: '7d',
   });
 };
 
@@ -13,15 +14,32 @@ const generateToken = (id) => {
 const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
 
-  const userExists = await User.findOne({ email });
+  // Input validation
+  if (!name || !email || !password) {
+    return res.status(400).json({ message: 'Please provide all required fields' });
+  }
+
+  if (!validator.isEmail(email)) {
+    return res.status(400).json({ message: 'Please provide a valid email address' });
+  }
+
+  if (password.length < 8) {
+    return res.status(400).json({ message: 'Password must be at least 8 characters long' });
+  }
+
+  // Sanitize inputs
+  const sanitizedEmail = validator.normalizeEmail(email);
+  const sanitizedName = validator.escape(name);
+
+  const userExists = await User.findOne({ email: sanitizedEmail });
 
   if (userExists) {
     return res.status(400).json({ message: 'User already exists' });
   }
 
   const user = await User.create({
-    name,
-    email,
+    name: sanitizedName,
+    email: sanitizedEmail,
     password,
   });
 
@@ -43,7 +61,18 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
+  // Input validation
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Please provide email and password' });
+  }
+
+  if (!validator.isEmail(email)) {
+    return res.status(400).json({ message: 'Please provide a valid email address' });
+  }
+
+  const sanitizedEmail = validator.normalizeEmail(email);
+
+  const user = await User.findOne({ email: sanitizedEmail });
 
   if (user && (await user.matchPassword(password))) {
     res.json({

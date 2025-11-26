@@ -1,8 +1,19 @@
 const dotenv = require('dotenv');
 dotenv.config();
+
+// Validate critical environment variables
+if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
+    console.error('ERROR: JWT_SECRET must be set and at least 32 characters long');
+    process.exit(1);
+}
+if (!process.env.MONGO_URI) {
+    console.error('ERROR: MONGO_URI must be set');
+    process.exit(1);
+}
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const helmet = require('helmet');
 const path = require('path');
 const cron = require('node-cron');
 const authRoutes = require('./routes/authRoutes');
@@ -18,6 +29,7 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 
 // Middleware
+app.use(helmet()); // Security headers
 app.use(cors());
 app.use(express.json());
 
@@ -35,8 +47,8 @@ mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 })
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.error(err));
+    .then(() => console.log('MongoDB connected'))
+    .catch(err => console.error(err));
 
 // Cron job for reminders
 cron.schedule('* * * * *', async () => {
@@ -69,8 +81,13 @@ cron.schedule('* * * * *', async () => {
 
         // 🔥 3. Trigger reminders
         for (const reminder of dueReminders) {
-            if (!reminder.user || !reminder.user.enableNotifications) {
-                console.log(`Notifications disabled for user ${reminder.user._id} or user not found.`);
+            if (!reminder.user) {
+                console.log(`User not found for reminder ${reminder._id}. Skipping.`);
+                continue;
+            }
+
+            if (!reminder.user.enableNotifications) {
+                console.log(`Notifications disabled for user ${reminder.user._id}.`);
                 continue;
             }
 
@@ -97,14 +114,14 @@ Thank you!`;
                         const whatsappTo = reminder.whatsappNumber.startsWith("whatsapp:")
                             ? reminder.whatsappNumber
                             : `whatsapp:${reminder.whatsappNumber}`;
-                
+
                         await sendWhatsAppReminder(
                             whatsappTo,
                             userName,
                             slotName,
                             medicineList
                         );
-                
+
                         notificationStatus = 'sent';
                         notificationMethodUsed =
                             notificationMethodUsed === 'email' ? 'both' : 'whatsapp';
