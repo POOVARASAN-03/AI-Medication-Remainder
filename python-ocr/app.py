@@ -1,17 +1,18 @@
 from flask import Flask, request, jsonify
-from paddleocr import PaddleOCR
+import easyocr
 import numpy as np
 import cv2
 import requests
-
 import os
+
 os.environ["FLAGS_allocator_strategy"] = "naive_best_fit"
 
 app = Flask(__name__)
 
-# Initialize OCR engine (English + angle detection)
-ocr_engine = PaddleOCR(use_angle_cls=True, lang='en')
-
+# Initialize EasyOCR engine (English)
+print("🔧 Loading OCR model...")
+ocr_engine = easyocr.Reader(['en'], gpu=False)
+print("📌 OCR model loaded!")
 
 @app.route('/ocr', methods=['POST'])
 def ocr_image():
@@ -39,18 +40,14 @@ def ocr_image():
         if img is None:
             return jsonify({'error': 'Could not decode image'}), 400
 
-        print("🔍 Running PaddleOCR...")
+        print("🔍 Running OCR...")
 
-        # PaddleOCR prediction
-        result = ocr_engine.predict(img)
-        print("📝 Raw OCR Result:", result)
+        # OCR prediction
+        results = ocr_engine.readtext(img)
 
-        # Correct extraction for PaddleOCR v3
         extracted_text = []
-
-        for block in result:
-            if isinstance(block, dict) and "rec_texts" in block:
-                extracted_text.extend(block["rec_texts"])
+        for box, text, score in results:
+            extracted_text.append(text)
 
         final_text = " ".join(extracted_text)
         print("📄 Final Extracted Text:", final_text)
@@ -66,8 +63,11 @@ def ocr_image():
         return jsonify({'error': f'OCR processing error: {str(e)}'}), 500
 
 
+@app.route('/')
+def home():
+    return "Medication OCR API is running!"
+
 if __name__ == "__main__":
-    import os
-    port = int(os.environ.get("PORT", 5000))  # Render gives PORT env var
+    port = int(os.environ.get("PORT", 5000))  # Render assigned PORT
     print(f"🚀 OCR Server running on port {port}")
     app.run(host="0.0.0.0", port=port)
