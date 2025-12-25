@@ -8,17 +8,25 @@ const jwt = require('jsonwebtoken');
  * This can be called by cron job or manually via API endpoint
  */
 const triggerActiveReminders = async () => {
-    console.log('Running reminder check...');
+    console.log('🔔 Running reminder check...');
 
     const now = new Date();
 
-    // Normalize time → "HH:MM"
-    const currentTime = now
-        .toLocaleTimeString('en-US', { hour12: false })
-        .slice(0, 5);
+    // Convert UTC time to IST (UTC + 5:30)
+    const istOffset = 5.5 * 60 * 60 * 1000; // 5 hours 30 minutes in milliseconds
+    const istTime = new Date(now.getTime() + istOffset);
 
-    // Normalize date → "YYYY-MM-DD"
-    const currentDay = now.toISOString().split('T')[0];
+    // Normalize IST time → "HH:MM"
+    const currentTime = istTime
+        .toISOString()
+        .slice(11, 16); // Extract HH:MM from ISO string
+
+    // Normalize date → "YYYY-MM-DD" (IST date)
+    const currentDay = istTime.toISOString().split('T')[0];
+
+    console.log('⏰ Current IST time:', currentTime);
+    console.log('📅 Current IST date:', currentDay);
+    console.log('🌍 UTC time:', now.toISOString());
 
     try {
         // 🔥 1. Auto-mark expired reminders

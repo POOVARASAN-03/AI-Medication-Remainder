@@ -23,6 +23,9 @@ router.post('/trigger',verifyCronSecret, async (req, res) => {
             message: 'Reminder check triggered successfully',
             serverTime: currentTime,
             serverDate: currentDay,
+            serverTimezone: 'UTC',
+            serverTimestamp: now.toISOString(),
+            note: 'Server runs in UTC. Reminders should be set in UTC time.',
             data: result
         });
     } catch (error) {
