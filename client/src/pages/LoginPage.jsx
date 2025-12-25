@@ -22,13 +22,28 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+    
+    console.log('Attempting login with:', { email, apiUrl: import.meta.env.VITE_API_URL });
+    
     try {
       const res = await API.post('/api/auth/login', { email, password });
+      console.log('Login response:', res.data);
       localStorage.setItem('userInfo', JSON.stringify(res.data));
       toast.success('Login successful! Welcome back.');
       navigate('/dashboard');
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Login failed. Please try again.');
+      console.error('Login error:', err);
+      console.error('Error details:', {
+        status: err.response?.status,
+        message: err.response?.data?.message,
+        data: err.response?.data
+      });
+      
+      const errorMessage = err.response?.data?.message || 
+                          err.message === 'Network Error' 
+                            ? 'Cannot connect to server. Please check your internet connection.' 
+                            : 'Login failed. Please try again.';
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
