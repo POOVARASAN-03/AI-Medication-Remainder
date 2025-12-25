@@ -121,17 +121,27 @@ function App() {
         }}
       />
       <Routes>
+        {/* Public root route - redirect based on auth status */}
+        <Route 
+          path="/" 
+          element={
+            localStorage.getItem('userInfo') 
+              ? <Navigate to="/dashboard" replace /> 
+              : <Navigate to="/login" replace />
+          } 
+        />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
-        <Route path="/" element={<PrivateRoute />}>
+        
+        {/* Protected routes */}
+        <Route element={<PrivateRoute />}>
           <Route element={<PrivateLayout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />}>
-            <Route index element={<Navigate to="/dashboard" replace />} />
-            <Route path="dashboard" element={<DashboardPage toggleSidebar={toggleSidebar} />} /> {/* Pass toggleSidebar */}
+            <Route path="dashboard" element={<DashboardPage toggleSidebar={toggleSidebar} />} />
             <Route path="history" element={<HistoryPage />} />
             <Route path="reminders" element={<RemindersPage />} />
-            <Route path="reminders/:prescriptionId" element={<PrescriptionRemindersPage />} /> {/* New route for grouped reminders */}
+            <Route path="reminders/:prescriptionId" element={<PrescriptionRemindersPage />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="prescription-view/:id" element={<PrescriptionViewPage />} />
           </Route>
