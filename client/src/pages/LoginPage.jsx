@@ -17,7 +17,7 @@ const LoginPage = () => {
     if (localStorage.getItem('userInfo')) {
       navigate('/dashboard');
     }
-  }, [navigate]);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -112,7 +112,7 @@ const DashboardPage = ({ toggleSidebar }) => {
       }
     };
     fetchUserProfile();
-  }, [navigate]);
+  }, []);
 
   // Effect to re-fetch daily adherence when calendar month changes
   useEffect(() => {
