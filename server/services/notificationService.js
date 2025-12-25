@@ -69,6 +69,8 @@ const sendWhatsAppReminder = async (to, userName, slotName, medicineList) => {
       })
     };
 
+    console.log("Twilio WhatsApp Payload:", payload); // Add this line for debugging
+
     // 🔥 Universal Template API endpoint
     const message = await twilioClient.messages.create(payload);
 

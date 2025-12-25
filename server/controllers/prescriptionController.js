@@ -230,7 +230,7 @@ const checkDrugInteractions = (medicines) => {
 
   for (let i = 0; i < medicines.length; i++) {
     for (let j = i + 1; j < medicines.length; j++) {
-      
+
       const m1 = normalizeName(medicines[i].name);
       const m2 = normalizeName(medicines[j].name);
 
@@ -273,55 +273,51 @@ const checkDrugInteractions = (medicines) => {
 // @desc    Upload prescription image, analyze it, and save details
 // @route   POST /api/prescriptions/upload
 // @access  Private
+
 const uploadPrescription = async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ message: 'No image file uploaded' });
     }
 
-    // 1. Upload to Cloudinary
+    const { prescriptionName } = req.body;
+    if (!prescriptionName) {
+      return res.status(400).json({ message: 'Prescription name is required' });
+    }
+
     const cloudinaryResult = await uploadToCloudinary(req.file.buffer);
     const imageUrl = cloudinaryResult.secure_url;
 
-    // 2. Send Cloudinary URL to Python OCR
-    const ocrResponse = await axios.post(`${process.env.PYTHON_OCR_URL}/ocr`, {
-      imageUrl,
-    });
+    const ocrResponse = await axios.post(
+      `${process.env.PYTHON_OCR_URL}/ocr`,
+      { imageUrl },
+      { headers: { "Content-Type": "application/json" } }
+    );
 
     const extractedText = ocrResponse.data.text;
-    console.log('OCR Extracted Text:', extractedText); // Debug log
+    console.log('OCR Extracted Text:', extractedText);
 
-    // 3. Extract medicines
     const medicines = extractMedicineDetails(extractedText);
-    console.log('Extracted Medicines:', medicines); // Debug log
-
-    // 4. Drug interactions
     const interactions = checkDrugInteractions(medicines);
-    console.log('Detected Interactions:', interactions); // Debug log
 
-    // 5. Save to DB
     const prescription = await Prescription.create({
       user: req.user._id,
+      name: prescriptionName,
       image: imageUrl,
       extractedText,
       medicines,
       interactions,
     });
 
-    // 6. Auto-create reminders
-    // if (req.user) {
-    //   await autoCreateReminders(prescription, req.user);
-    // }
-
     return res.status(201).json({
-      message: 'Prescription uploaded and analyzed successfully',
+      message: "Prescription uploaded and analyzed successfully",
       prescription,
     });
 
   } catch (error) {
-    console.error('UPLOAD/ANALYSIS ERROR:', error);
+    console.error("UPLOAD/ANALYSIS ERROR:", error.response?.data || error.message);
     return res.status(500).json({
-      message: 'Server error during upload or analysis',
+      message: "Server error during upload or analysis",
       error: error.message,
     });
   }
@@ -331,36 +327,36 @@ const uploadPrescription = async (req, res) => {
 // @route   GET /api/prescriptions
 // @access  Private
 const getUserPrescriptions = async (req, res) => {
-    try {
-        const prescriptions = await Prescription.find({ user: req.user._id }).sort({ createdAt: -1 });
-        res.status(200).json(prescriptions);
-    } catch (error) {
-        console.error('Error fetching prescriptions:', error);
-        res.status(500).json({ message: 'Server error', error: error.message });
-    }
+  try {
+    const prescriptions = await Prescription.find({ user: req.user._id }).sort({ createdAt: -1 });
+    res.status(200).json(prescriptions);
+  } catch (error) {
+    console.error('Error fetching prescriptions:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
 };
 
 // @desc    Get a single prescription by ID
 // @route   GET /api/prescriptions/:id
 // @access  Private
 const getPrescriptionById = async (req, res) => {
-    try {
-        const prescription = await Prescription.findById(req.params.id);
+  try {
+    const prescription = await Prescription.findById(req.params.id);
 
-        if (!prescription) {
-            return res.status(404).json({ message: 'Prescription not found' });
-        }
-
-        // Ensure the prescription belongs to the authenticated user
-        if (prescription.user.toString() !== req.user._id.toString()) {
-            return res.status(401).json({ message: 'Not authorized to view this prescription' });
-        }
-
-        res.status(200).json(prescription);
-    } catch (error) {
-        console.error('Error fetching prescription by ID:', error);
-        res.status(500).json({ message: 'Server error', error: error.message });
+    if (!prescription) {
+      return res.status(404).json({ message: 'Prescription not found' });
     }
+
+    // Ensure the prescription belongs to the authenticated user
+    if (prescription.user.toString() !== req.user._id.toString()) {
+      return res.status(401).json({ message: 'Not authorized to view this prescription' });
+    }
+
+    res.status(200).json(prescription);
+  } catch (error) {
+    console.error('Error fetching prescription by ID:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
 };
 
 module.exports = { uploadPrescription, getUserPrescriptions, getPrescriptionById };

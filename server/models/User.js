@@ -16,18 +16,13 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    whatsappNumber: {
-      type: String,
-      default: '',
-    },
-    notificationMethod: {
-      type: String,
-      enum: ['email', 'whatsapp', 'both'],
-      default: 'email',
-    },
     enableNotifications: {
       type: Boolean,
       default: true,
+    },
+    fcmToken: {
+      type: String,
+      default: null,
     },
   },
   {

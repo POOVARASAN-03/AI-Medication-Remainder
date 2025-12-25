@@ -37,21 +37,6 @@ const reminderSchema = mongoose.Schema(
       required: true,
     },
 
-    // Notification Method
-    notifyBy: {
-      type: String,
-      enum: ['email', 'whatsapp', 'both'],
-      default: 'email',
-    },
-
-    // Contact Details
-    whatsappNumber: {
-      type: String, // Example: "whatsapp:+919876543210"
-    },
-    email: {
-      type: String,
-    },
-
     status: {
       type: String,
       enum: ['active', 'expired'],

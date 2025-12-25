@@ -25,12 +25,12 @@ const reminderHistorySchema = mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['sent', 'taken', 'missed', 'failed'], // Added 'failed'
-    default: 'sent',
+    enum: ['pending', 'sent', 'taken', 'missed', 'failed'],
+    default: 'pending',
   },
   notificationMethod: {
     type: String,
-    enum: ['email', 'whatsapp', 'both', 'none'],
+    enum: ['email', 'whatsapp', 'push', 'both', 'none'],
     default: 'none',
   },
 });
