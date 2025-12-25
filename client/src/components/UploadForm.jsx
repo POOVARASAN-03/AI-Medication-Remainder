@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import toast from 'react-hot-toast';
 import API from '../services/api';
-import { Camera, Upload, X, Image as ImageIcon } from 'lucide-react';
+import { Camera, Upload, X, Image as ImageIcon, RefreshCw } from 'lucide-react';
 
 const UploadForm = ({ onUploadSuccess }) => {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -9,6 +9,7 @@ const UploadForm = ({ onUploadSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
+  const [facingMode, setFacingMode] = useState('environment'); // 'user' for front, 'environment' for back
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const [stream, setStream] = useState(null);
@@ -51,12 +52,42 @@ const UploadForm = ({ onUploadSuccess }) => {
 
   const startCamera = async () => {
     try {
-      const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const mediaStream = await navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: facingMode } 
+      });
       setStream(mediaStream);
       setShowCamera(true);
     } catch (err) {
       console.error("Error accessing camera:", err);
       toast.error("Could not access camera. Please ensure you have granted permission.");
+    }
+  };
+
+  const switchCamera = async () => {
+    // Stop current stream
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+    }
+
+    // Toggle facing mode
+    const newFacingMode = facingMode === 'user' ? 'environment' : 'user';
+    setFacingMode(newFacingMode);
+
+    // Start new stream with new facing mode
+    try {
+      const mediaStream = await navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: newFacingMode } 
+      });
+      setStream(mediaStream);
+    } catch (err) {
+      console.error("Error switching camera:", err);
+      toast.error("Could not switch camera.");
+      // Fallback to previous camera
+      setFacingMode(facingMode);
+      const fallbackStream = await navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: facingMode } 
+      });
+      setStream(fallbackStream);
     }
   };
 
@@ -254,6 +285,15 @@ const UploadForm = ({ onUploadSuccess }) => {
               className="w-full h-full object-cover"
             />
             <canvas ref={canvasRef} className="hidden" />
+            
+            {/* Camera Switch Button */}
+            <button
+              onClick={switchCamera}
+              className="absolute top-4 right-4 p-3 bg-white/90 backdrop-blur-sm text-gray-800 rounded-full hover:bg-white transition-all shadow-lg z-10"
+              title="Switch Camera"
+            >
+              <RefreshCw className="w-5 h-5" />
+            </button>
           </div>
 
           <div className="flex gap-3">

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Log the API URL for debugging
-const apiUrl = import.meta.env.VITE_API_URL || 'https://ai-medication-remainder-iz93.onrender.com';
+const apiUrl = import.meta.env.VITE_API_URL || 'https://ai-medication-api.onrender.com';
 console.log('🔗 API Base URL:', apiUrl);
 
 const API = axios.create({
