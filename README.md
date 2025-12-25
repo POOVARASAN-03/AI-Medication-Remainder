@@ -3,7 +3,6 @@
 > AI-powered medication management platform with intelligent reminders, prescription analysis, and health tracking.
 
 [![Live Demo](https://img.shields.io/badge/🌐-Live%20Demo-blue)](https://ai-medicationremainder-gasx.onrender.com)
-[![Server Status](https://img.shields.io/badge/🚀-Server-green)](https://ai-medication-api.onrender.com)
 
 ---
 
