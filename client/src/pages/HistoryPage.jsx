@@ -24,7 +24,11 @@ const HistoryPage = () => {
           },
         };
         const res = await API.get('/api/prescriptions', config);
-        setPrescriptions(res.data);
+        // Sort by upload date (most recent first)
+        const sortedPrescriptions = res.data.sort((a, b) =>
+          new Date(b.uploadDate) - new Date(a.uploadDate)
+        );
+        setPrescriptions(sortedPrescriptions);
       } catch (err) {
         console.error('Error fetching prescriptions:', err);
         setError(err.response?.data?.message || 'Failed to fetch prescription history');
@@ -70,7 +74,7 @@ const HistoryPage = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {prescriptions.map((prescription) => (
+          {prescriptions.map((prescription, index) => (
             <div
               key={prescription._id}
               className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow"
@@ -91,6 +95,9 @@ const HistoryPage = () => {
 
               {/* Prescription Details */}
               <div className="p-4 space-y-3">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  {prescription.name || `Prescription #${prescriptions.length - index}`}
+                </h3>
                 <div className="flex items-center gap-2 text-sm">
                   <Calendar className="w-4 h-4 text-gray-400" />
                   <span className="text-gray-600">

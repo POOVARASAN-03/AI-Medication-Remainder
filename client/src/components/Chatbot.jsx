@@ -11,6 +11,7 @@ const Chatbot = () => {
             .replace(/\* /g, '• ') // Bullet points
             .replace(/\n/g, '<br/>'); // Line breaks
     };
+
     const [isOpen, setIsOpen] = useState(false);
     const [isMinimized, setIsMinimized] = useState(false);
     const [messages, setMessages] = useState([
@@ -112,37 +113,71 @@ const Chatbot = () => {
                         <X className="w-4 h-4" />
                     </button>
                 </div>
-                <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
             </div>
-        </div>
-                            </div >
-                        )}
-<div ref={messagesEndRef} />
-                    </div >
 
-    {/* Input Area */ }
-    < div className = "p-4 bg-white border-t border-gray-100 shrink-0" >
-        <form onSubmit={handleSendMessage} className="flex gap-2">
-            <input
-                type="text"
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                placeholder="Type your message..."
-                disabled={isLoading}
-                className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm disabled:opacity-50"
-            />
-            <button
-                type="submit"
-                disabled={!inputText.trim() || isLoading}
-                className="p-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm"
-            >
-                <Send className="w-5 h-5" />
-            </button>
-        </form>
-                    </div >
+            {!isMinimized && (
+                <>
+                    {/* Messages Area */}
+                    <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+                        {messages.map((msg) => (
+                            <div
+                                key={msg.id}
+                                className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                            >
+                                <div
+                                    className={`max-w-[80%] p-3 rounded-2xl text-sm ${msg.sender === 'user'
+                                        ? 'bg-blue-600 text-white rounded-br-none'
+                                        : 'bg-white text-gray-800 border border-gray-200 rounded-bl-none shadow-sm'
+                                        }`}
+                                >
+                                    {msg.sender === 'bot' ? (
+                                        <div
+                                            className="prose prose-sm max-w-none"
+                                            dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.text) }}
+                                        />
+                                    ) : (
+                                        <p className="whitespace-pre-wrap">{msg.text}</p>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
+                        {isLoading && (
+                            <div className="flex justify-start">
+                                <div className="bg-white text-gray-800 border border-gray-200 rounded-2xl rounded-bl-none shadow-sm p-3">
+                                    <div className="flex gap-1">
+                                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                                        <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        <div ref={messagesEndRef} />
+                    </div>
+
+                    {/* Input Area */}
+                    <div className="p-4 bg-white border-t border-gray-100 shrink-0">
+                        <form onSubmit={handleSendMessage} className="flex gap-2">
+                            <input
+                                type="text"
+                                value={inputText}
+                                onChange={(e) => setInputText(e.target.value)}
+                                placeholder="Type your message..."
+                                disabled={isLoading}
+                                className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-sm disabled:opacity-50"
+                            />
+                            <button
+                                type="submit"
+                                disabled={!inputText.trim() || isLoading}
+                                className="p-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm"
+                            >
+                                <Send className="w-5 h-5" />
+                            </button>
+                        </form>
+                    </div>
                 </>
             )}
-        </div >
+        </div>
     );
 };
 

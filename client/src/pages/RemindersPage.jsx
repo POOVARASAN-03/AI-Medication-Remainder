@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import API from '../services/api';
-import { Bell, Clock, Calendar, Pill, Mail, MessageSquare, CheckCircle } from 'lucide-react';
+import { Bell, Clock, Calendar, Pill, Mail, MessageSquare, CheckCircle, ChevronRight } from 'lucide-react';
 
 const RemindersPage = () => {
   const [reminders, setReminders] = useState([]);
@@ -53,6 +53,13 @@ const RemindersPage = () => {
     }
   };
 
+  const formatTimeTo12Hour = (time) => {
+    const [hour, minute] = time.split(':').map(Number);
+    const period = hour >= 12 ? 'PM' : 'AM';
+    const formattedHour = hour % 12 || 12; // Convert 0 to 12 for 12-hour format
+    return `${formattedHour}:${minute.toString().padStart(2, '0')} ${period}`;
+  };
+
   const getTimeSlotLabel = (time) => {
     const timeMap = {
       '08:00': 'Morning',
@@ -60,8 +67,24 @@ const RemindersPage = () => {
       '18:00': 'Evening',
       '21:00': 'Night',
     };
-    return timeMap[time] || time;
+    return timeMap[time] || formatTimeTo12Hour(time);
   };
+
+  const groupedReminders = reminders.reduce((acc, reminder) => {
+    const prescriptionName = reminder.prescription?.name || 'Unknown Prescription';
+    const prescriptionId = reminder.prescription?._id;
+    const prescriptionImage = reminder.prescription?.image;
+
+    if (!acc[prescriptionName]) {
+      acc[prescriptionName] = {
+        id: prescriptionId, // Store the ID with the group
+        reminders: [],
+        image: prescriptionImage // Store image if available
+      };
+    }
+    acc[prescriptionName].reminders.push(reminder);
+    return acc;
+  }, {});
 
   if (loading) {
     return (
@@ -123,7 +146,9 @@ const RemindersPage = () => {
         </div>
       )}
 
-      {reminders.length === 0 ? (
+      <h2 className="text-2xl font-bold text-gray-800 mb-4">Your Prescriptions with Reminders</h2>
+
+      {Object.keys(groupedReminders).length === 0 ? (
         <div className="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-300">
           <Bell className="w-16 h-16 text-gray-300 mx-auto mb-4" />
           <p className="text-gray-500 font-medium mb-2">No active reminders</p>
@@ -131,66 +156,45 @@ const RemindersPage = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {reminders.map((reminder) => (
-            <div
-              key={reminder._id}
-              className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow"
-            >
-              {/* Header */}
-              <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200">
-                <div className="flex items-start justify-between">
+          {Object.entries(groupedReminders).map(([prescriptionName, groupedData]) => {
+            const activeRemindersCount = groupedData.reminders.filter(r => r.status === 'active').length;
+            const prescriptionId = groupedData.id;
+            const prescriptionImage = groupedData.image;
+
+            // Only render if we have a valid prescriptionId (not undefined, null, or the string "undefined")
+            if (!prescriptionId || prescriptionId === 'undefined') return null;
+
+            return (
+              <div
+                key={prescriptionName}
+                onClick={() => navigate(`/reminders/${prescriptionId}`)} // Use the stored ID
+                className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow cursor-pointer"
+              >
+                <div className="p-4 flex items-center gap-4">
+                  {prescriptionImage ? (
+                    <img
+                      src={prescriptionImage}
+                      alt={prescriptionName}
+                      className="w-16 h-16 object-cover rounded-lg border border-gray-100"
+                    />
+                  ) : (
+                    <div className="w-16 h-16 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Pill className="w-8 h-8 text-blue-600" />
+                    </div>
+                  )}
                   <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900 mb-1 flex items-center gap-2">
-                      <Pill className="w-5 h-5 text-blue-600" />
-                      {reminder.medicineName}
+                    <h3 className="font-bold text-lg text-gray-900 mb-1 leading-tight">
+                      {prescriptionName}
                     </h3>
-                    <p className="text-sm text-gray-600">{reminder.dosage}</p>
+                    <p className="text-sm text-gray-600">
+                      {activeRemindersCount} active reminder{activeRemindersCount !== 1 ? 's' : ''}
+                    </p>
                   </div>
-                  <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${reminder.status === 'active'
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-gray-100 text-gray-600'
-                    }`}>
-                    {reminder.status}
-                  </span>
+                  <ChevronRight className="w-5 h-5 text-gray-400" />
                 </div>
               </div>
-
-              {/* Body */}
-              <div className="p-4 space-y-3">
-                <div className="flex items-center gap-2 text-sm">
-                  <Clock className="w-4 h-4 text-gray-400" />
-                  <span className="text-gray-700">
-                    {getTimeSlotLabel(reminder.time)} ({reminder.time})
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-2 text-sm">
-                  <Calendar className="w-4 h-4 text-gray-400" />
-                  <span className="text-gray-600">
-                    {reminder.startDate} to {reminder.endDate}
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-2 text-sm pt-2 border-t border-gray-100">
-                  {getNotificationIcon(reminder.notifyBy)}
-                  <span className="text-gray-600 capitalize">
-                    Notify via {reminder.notifyBy}
-                  </span>
-                </div>
-
-                {reminder.prescription?.image && (
-                  <div className="pt-3 border-t border-gray-100">
-                    <button
-                      onClick={() => navigate(`/prescription-view/${reminder.prescription._id}`)}
-                      className="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
-                    >
-                      View Prescription →
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

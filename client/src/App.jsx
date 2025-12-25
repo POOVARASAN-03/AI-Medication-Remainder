@@ -1,13 +1,21 @@
-import React, { useState } from 'react'; // Import useState
-import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom'; // Import Outlet
-import { Toaster } from 'react-hot-toast';
+import React, { useState, useEffect } from 'react'; // Import useState, useEffect
+import { BrowserRouter as Router, Routes, Route, Outlet, Navigate } from 'react-router-dom'; // Import Outlet
+import { Toaster, toast } from 'react-hot-toast';
+import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+import firebaseConfig from './firebaseConfig';
+import { initializeApp } from 'firebase/app';
+import API from './services/api';
 
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import DashboardPage from './pages/DashboardPage';
 import HistoryPage from './pages/HistoryPage';
 import RemindersPage from './pages/RemindersPage'; // Import RemindersPage
 import PrescriptionViewPage from './pages/PrescriptionViewPage';
+import PrescriptionRemindersPage from './pages/PrescriptionRemindersPage'; // Import PrescriptionRemindersPage
+import ProfilePage from './pages/ProfilePage';
 
 import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
@@ -36,6 +44,51 @@ function App() {
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
+
+  useEffect(() => {
+    const firebaseApp = initializeApp(firebaseConfig);
+    const messaging = getMessaging(firebaseApp);
+
+    Notification.requestPermission()
+      .then((permission) => {
+        if (permission === 'granted') {
+          console.log('Notification permission granted.');
+          getToken(messaging, { vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY })
+            .then((currentToken) => {
+              if (currentToken) {
+                console.log('FCM Token:', currentToken);
+                const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+                const userId = userInfo ? userInfo._id : null;
+
+                if (userId) {
+                  API.post('/api/store-fcm-token', { userId, fcmToken: currentToken })
+                    .catch(err => console.error('Failed to store FCM token:', err));
+                } else {
+                  console.log('User not logged in, cannot store FCM token.');
+                }
+              } else {
+                console.log('No registration token available.');
+              }
+            })
+            .catch((err) => {
+              console.error('Error getting token:', err);
+            });
+          console.log('Notification permission denied.');
+        }
+      });
+
+    // Handle foreground messages - only log, let service worker display notification
+    const unsubscribe = onMessage(messaging, (payload) => {
+      console.log('Foreground message received:', payload);
+      // The service worker handles displaying the notification, including for foreground messages.
+      // We might want to update some UI element here, e.g., a notification badge.
+      // For now, just logging.
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   return (
     <Router>
@@ -70,11 +123,16 @@ function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
         <Route path="/" element={<PrivateRoute />}>
           <Route element={<PrivateLayout isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />}>
+            <Route index element={<Navigate to="/dashboard" replace />} />
             <Route path="dashboard" element={<DashboardPage toggleSidebar={toggleSidebar} />} /> {/* Pass toggleSidebar */}
             <Route path="history" element={<HistoryPage />} />
             <Route path="reminders" element={<RemindersPage />} />
+            <Route path="reminders/:prescriptionId" element={<PrescriptionRemindersPage />} /> {/* New route for grouped reminders */}
+            <Route path="profile" element={<ProfilePage />} />
             <Route path="prescription-view/:id" element={<PrescriptionViewPage />} />
           </Route>
         </Route>

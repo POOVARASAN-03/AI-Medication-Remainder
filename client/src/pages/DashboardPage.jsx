@@ -3,13 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import API from '../services/api';
 import UploadForm from '../components/UploadForm';
-import { Clock, TrendingUp, Pill } from 'lucide-react';
+import { Clock, TrendingUp, Pill, Calendar as CalendarIcon } from 'lucide-react';
+import Calendar from 'react-calendar';
+import 'react-calendar/dist/Calendar.css'; // Default calendar styles
+import '../components/CalendarStyles.css'; // Custom calendar styles
 
 const DashboardPage = ({ toggleSidebar }) => {
   const [userName, setUserName] = useState('');
   const [lastUploadedPrescription, setLastUploadedPrescription] = useState(null);
   const [nextReminder, setNextReminder] = useState(null);
   const [weeklyAdherence, setWeeklyAdherence] = useState(0);
+  const [calendarDate, setCalendarDate] = useState(new Date()); // State for calendar's selected date
+  const [dailyAdherence, setDailyAdherence] = useState({}); // State for daily adherence data
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,26 +43,33 @@ const DashboardPage = ({ toggleSidebar }) => {
         // Fetch next upcoming reminder
         const remindersRes = await API.get('/api/reminders', config);
         if (remindersRes.data.length > 0) {
-          // Find the next reminder based on time
           const now = new Date();
           const currentTime = now.toLocaleTimeString('en-US', { hour12: false }).slice(0, 5);
           const currentDate = now.toISOString().split('T')[0];
 
-          // Filter active reminders that are today or in the future
-          const upcomingReminders = remindersRes.data.filter(r =>
-            r.status === 'active' && r.endDate >= currentDate
+          // Filter active reminders within date range
+          const activeReminders = remindersRes.data.filter(r =>
+            r.status === 'active' &&
+            r.startDate <= currentDate &&
+            r.endDate >= currentDate
           );
 
-          // Sort by time to find the next one
-          const sortedReminders = upcomingReminders.sort((a, b) => {
-            if (a.time < b.time) return -1;
-            if (a.time > b.time) return 1;
-            return 0;
-          });
+          if (activeReminders.length > 0) {
+            // Find reminders for today that haven't occurred yet
+            const upcomingToday = activeReminders.filter(r => r.time > currentTime);
 
-          // Find next reminder after current time
-          const nextReminderToday = sortedReminders.find(r => r.time > currentTime);
-          setNextReminder(nextReminderToday || sortedReminders[0]);
+            if (upcomingToday.length > 0) {
+              // Sort by time and get the earliest one today
+              upcomingToday.sort((a, b) => a.time.localeCompare(b.time));
+              setNextReminder(upcomingToday[0]);
+            } else {
+              // No more reminders today, show the earliest reminder for tomorrow
+              activeReminders.sort((a, b) => a.time.localeCompare(b.time));
+              setNextReminder(activeReminders[0]);
+            }
+          } else {
+            setNextReminder(null);
+          }
         }
 
         // Fetch reminder history for weekly adherence
@@ -82,6 +94,16 @@ const DashboardPage = ({ toggleSidebar }) => {
           setWeeklyAdherence(100); // Default to 100% if no history
         }
 
+        // Fetch daily adherence for the current month
+        const today = new Date();
+        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+        const dailyAdherenceRes = await API.get(
+          `/api/reminders/daily-adherence?startDate=${startOfMonth.toISOString().split('T')[0]}&endDate=${endOfMonth.toISOString().split('T')[0]}`,
+          config
+        );
+        setDailyAdherence(dailyAdherenceRes.data);
+
       } catch (err) {
         console.error('Error fetching user profile:', err);
         toast.error('Failed to load dashboard data. Please try again.');
@@ -91,6 +113,37 @@ const DashboardPage = ({ toggleSidebar }) => {
     };
     fetchUserProfile();
   }, [navigate]);
+
+  // Effect to re-fetch daily adherence when calendar month changes
+  useEffect(() => {
+    const fetchDailyAdherenceForMonth = async () => {
+      try {
+        const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+        if (!userInfo || !userInfo.token) {
+          return;
+        }
+        const config = {
+          headers: {
+            Authorization: `Bearer ${userInfo.token}`,
+          },
+        };
+
+        const startOfMonth = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), 1);
+        const endOfMonth = new Date(calendarDate.getFullYear(), calendarDate.getMonth() + 1, 0);
+
+        const dailyAdherenceRes = await API.get(
+          `/api/reminders/daily-adherence?startDate=${startOfMonth.toISOString().split('T')[0]}&endDate=${endOfMonth.toISOString().split('T')[0]}`,
+          config
+        );
+        setDailyAdherence(dailyAdherenceRes.data);
+      } catch (err) {
+        console.error('Error fetching daily adherence for month:', err);
+        toast.error('Failed to load daily adherence data.');
+      }
+    };
+
+    fetchDailyAdherenceForMonth();
+  }, [calendarDate, navigate]); // Re-run when calendarDate changes
 
   const handleUploadSuccess = (prescriptionId) => {
     // Update localStorage and state after a successful upload
@@ -119,10 +172,17 @@ const DashboardPage = ({ toggleSidebar }) => {
     const timeMap = {
       '08:00': 'Morning',
       '13:00': 'Afternoon',
-      '18:00': 'Evening',
+      '17:00': 'Evening',
       '21:00': 'Night',
     };
-    return timeMap[time] || time;
+
+    // Convert time to 12-hour format with AM/PM
+    const [hour, minute] = time.split(':').map(Number);
+    const period = hour >= 12 ? 'PM' : 'AM';
+    const formattedHour = hour % 12 || 12; // Convert 0 to 12 for 12-hour format
+    const formattedTime = `${formattedHour}:${minute.toString().padStart(2, '0')} ${period}`;
+
+    return timeMap[time] ? `${timeMap[time]}: ${formattedTime}` : formattedTime;
   };
 
   return (
@@ -176,7 +236,7 @@ const DashboardPage = ({ toggleSidebar }) => {
               </div>
               <div className="space-y-1">
                 <p className="text-sm text-slate-600">
-                  <span className="font-medium">Time:</span> {getTimeSlotLabel(nextReminder.time)} ({nextReminder.time})
+                  <span className="font-medium">Time:</span> {getTimeSlotLabel(nextReminder.time)}
                 </p>
                 <p className="text-sm text-slate-600">
                   <span className="font-medium">Dosage:</span> {nextReminder.dosage}
@@ -205,32 +265,52 @@ const DashboardPage = ({ toggleSidebar }) => {
         {/* Weekly Adherence Widget */}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-slate-800">Weekly Adherence</h2>
-            <div className={`p-2 rounded-lg ${weeklyAdherence >= 80 ? 'bg-green-50' :
-              weeklyAdherence >= 50 ? 'bg-yellow-50' : 'bg-red-50'
-              }`}>
-              <TrendingUp className={`w-5 h-5 ${weeklyAdherence >= 80 ? 'text-green-600' :
-                weeklyAdherence >= 50 ? 'text-yellow-600' : 'text-red-600'
-                }`} />
+            <h2 className="text-lg font-semibold text-slate-800">Monthly Adherence</h2>
+            <div className="p-2 bg-purple-50 rounded-lg">
+              <CalendarIcon className="w-5 h-5 text-purple-600" />
             </div>
           </div>
-          <div className="text-center py-2">
-            <p className={`text-4xl font-bold mb-2 ${weeklyAdherence >= 80 ? 'text-green-600' :
-              weeklyAdherence >= 50 ? 'text-yellow-600' : 'text-red-600'
-              }`}>
-              {weeklyAdherence}%
-            </p>
-            <p className="text-sm text-slate-500">Last 7 days</p>
-            {weeklyAdherence >= 80 && (
-              <p className="text-xs text-green-600 mt-2">Great job! Keep it up! 🎉</p>
-            )}
-            {weeklyAdherence >= 50 && weeklyAdherence < 80 && (
-              <p className="text-xs text-yellow-600 mt-2">Good, but you can do better!</p>
-            )}
-            {weeklyAdherence < 50 && (
-              <p className="text-xs text-red-600 mt-2">Try to improve your adherence</p>
-            )}
-          </div>
+          <Calendar
+            onChange={setCalendarDate}
+            value={calendarDate}
+            view="month"
+            className="react-calendar-custom"
+            tileContent={({ date, view }) => {
+              if (view === 'month') {
+                const dateString = date.toISOString().split('T')[0];
+                const adherenceData = dailyAdherence[dateString];
+
+                if (adherenceData && adherenceData.percentage !== null) {
+                  let adherenceClass = '';
+                  if (adherenceData.percentage === 100) {
+                    adherenceClass = 'adherence-perfect';
+                  } else if (adherenceData.percentage >= 50) {
+                    adherenceClass = 'adherence-good';
+                  } else {
+                    adherenceClass = 'adherence-poor';
+                  }
+                  return (
+                    <div className={`adherence-indicator ${adherenceClass}`}>
+                      {adherenceData.percentage}%
+                    </div>
+                  );
+                }
+              }
+              return null;
+            }}
+            tileClassName={({ date, view }) => {
+              if (view === 'month') {
+                const dateString = date.toISOString().split('T')[0];
+                const adherenceData = dailyAdherence[dateString];
+                // Only apply class if adherenceData exists AND percentage is not null
+                if (adherenceData && adherenceData.percentage !== null) {
+                  return 'has-adherence-data';
+                }
+              }
+              return null;
+            }}
+          />
+          {/* Removed original adherence display */}
         </div>
       </div>
     </div>

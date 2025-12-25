@@ -5,6 +5,7 @@ import { Camera, Upload, X, Image as ImageIcon } from 'lucide-react';
 
 const UploadForm = ({ onUploadSuccess }) => {
   const [selectedFile, setSelectedFile] = useState(null);
+  const [prescriptionName, setPrescriptionName] = useState('');
   const [loading, setLoading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [showCamera, setShowCamera] = useState(false);
@@ -41,13 +42,17 @@ const UploadForm = ({ onUploadSuccess }) => {
     }
   };
 
+  // Effect to attach stream to video element when it becomes available
+  React.useEffect(() => {
+    if (stream && videoRef.current) {
+      videoRef.current.srcObject = stream;
+    }
+  }, [stream, showCamera]);
+
   const startCamera = async () => {
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
       setStream(mediaStream);
-      if (videoRef.current) {
-        videoRef.current.srcObject = mediaStream;
-      }
       setShowCamera(true);
     } catch (err) {
       console.error("Error accessing camera:", err);
@@ -84,10 +89,16 @@ const UploadForm = ({ onUploadSuccess }) => {
       return;
     }
 
+    if (!prescriptionName.trim()) {
+      toast.error('Please enter a prescription name.');
+      return;
+    }
+
     setLoading(true);
 
     const formData = new FormData();
     formData.append('image', selectedFile);
+    formData.append('prescriptionName', prescriptionName);
 
     try {
       const config = {
@@ -124,6 +135,21 @@ const UploadForm = ({ onUploadSuccess }) => {
         <Upload className="w-6 h-6 text-blue-600" />
         Upload Prescription
       </h3>
+
+      <div className="mb-4">
+        <label htmlFor="prescriptionName" className="block text-sm font-medium text-gray-700 mb-2">
+          Prescription Name <span className="text-red-500">*</span>
+        </label>
+        <input
+          type="text"
+          id="prescriptionName"
+          value={prescriptionName}
+          onChange={(e) => setPrescriptionName(e.target.value)}
+          placeholder="e.g., Blood Pressure Meds, Antibiotics"
+          className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          required
+        />
+      </div>
 
       {!showCamera ? (
         <div className="space-y-6">
