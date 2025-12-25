@@ -10,11 +10,19 @@ const verifyCronSecret = require('../middleware/verifyCronSecret');
  */
 router.post('/trigger',verifyCronSecret, async (req, res) => {
     try {
+        const now = new Date();
+        const currentTime = now.toLocaleTimeString('en-US', { hour12: false }).slice(0, 5);
+        const currentDay = now.toISOString().split('T')[0];
+        
+        console.log('🕐 Server time:', currentTime, '| Date:', currentDay);
+        
         const result = await triggerActiveReminders();
         
         res.status(200).json({
             success: true,
             message: 'Reminder check triggered successfully',
+            serverTime: currentTime,
+            serverDate: currentDay,
             data: result
         });
     } catch (error) {
